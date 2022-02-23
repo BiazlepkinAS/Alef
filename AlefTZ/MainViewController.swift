@@ -1,9 +1,3 @@
-//
-//  ViewController.swift
-//  AlefTZ
-//
-//  Created by Andrei Bezlepkin on 23.02.22.
-//
 
 import UIKit
 
@@ -95,15 +89,15 @@ class MainViewController: UIViewController, UITextFieldDelegate {
         button.setTitleColor(.blue, for: .normal)
         button.tintColor = .blue
         button.titleLabel?.textAlignment = .center
+        button.addTarget(self, action: #selector(addKidsForm), for: .touchUpInside)
         return button
     }()
     
     private lazy var delKidsButton: UIButton = {
         let button = UIButton()
         button.setTitle("Delete", for: .normal)
-        button.layer.borderColor = UIColor.blue.cgColor
-        button.layer.borderWidth = 2
-        button.layer.cornerRadius = 20
+        button.setTitleColor(.systemCyan, for: .normal)
+        button.addTarget(self, action: #selector(delKidsForm), for: .touchUpInside)
         button.tintColor = .blue
         return button
     }()
@@ -174,19 +168,16 @@ class MainViewController: UIViewController, UITextFieldDelegate {
         button.layer.borderWidth = 2
         button.layer.cornerRadius = 30
         button.setTitleColor(UIColor.red, for: .normal)
+        button.addTarget(self, action: #selector(clearAllForms), for: .touchUpInside)
         return button
     }()
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         prepareUI()
-        
     }
     
-    
     private func prepareUI() {
-        
         view.addSubview(mainTitle)
         mainTitle.translatesAutoresizingMaskIntoConstraints = false
         mainTitle.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 30).isActive = true
@@ -244,8 +235,6 @@ class MainViewController: UIViewController, UITextFieldDelegate {
         addKidsButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30).isActive = true
         addKidsButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
         addKidsButton.widthAnchor.constraint(equalToConstant: 150).isActive = true
-        addKidsButton.addTarget(self, action: #selector(kidsForm), for: .touchUpInside)
-        
         
         view.addSubview(clearForm)
         clearForm.translatesAutoresizingMaskIntoConstraints = false
@@ -258,21 +247,38 @@ class MainViewController: UIViewController, UITextFieldDelegate {
         self.ageTextField.delegate = self
         self.kidsNameTextField.delegate = self
         self.kidsAgeTextField.delegate = self
-        
     }
     
-    @objc func kidsForm() {
+    @objc func addKidsForm() {
         addNewView(to: self.view)
+    }
+    
+    @objc func delKidsForm() {
+    }
+    @objc func clearAllForms(sender: AnyObject) {
+        let optionsMenu = UIAlertController(title: nil, message: "choose your destiny", preferredStyle: .actionSheet)
+        let resetAction = UIAlertAction(title: "Reset Data", style: .default, handler: { (alert: UIAlertAction!) -> Void in
+            self.nameTextField.text = ""
+            self.ageTextField.text = ""
+            self.kidsNameTextField.text = ""
+            self.kidsAgeTextField.text = ""
+            print("reset")
+        })
         
-       
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: { (alert: UIAlertAction!) -> Void in
+            print("cancel")
+        })
         
+        optionsMenu.addAction(resetAction)
+        optionsMenu.addAction(cancelAction)
+        self.present(optionsMenu, animated: true, completion: nil)
     }
     
     private func addNewView(to container: UIView) {
         
         let newView = UIView()
         container.addSubview(newView)
-        newView.backgroundColor = .blue
+        newView.backgroundColor = .clear
         newView.translatesAutoresizingMaskIntoConstraints = false
         newView.topAnchor.constraint(equalTo: addKidsButton.bottomAnchor, constant: 30).isActive = true
         newView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30).isActive = true
@@ -284,7 +290,7 @@ class MainViewController: UIViewController, UITextFieldDelegate {
         kidsFormView.leadingAnchor.constraint(equalTo: newView.leadingAnchor).isActive = true
         kidsFormView.bottomAnchor.constraint(equalTo: newView.bottomAnchor).isActive = true
         kidsFormView.widthAnchor.constraint(equalToConstant: view.frame.size.width/2).isActive = true
-        kidsFormView.backgroundColor = .red
+        kidsFormView.backgroundColor = .clear
         
         kidsFormView.addSubview(kidsNameView)
         kidsNameView.translatesAutoresizingMaskIntoConstraints = false
@@ -292,11 +298,13 @@ class MainViewController: UIViewController, UITextFieldDelegate {
         kidsNameView.leadingAnchor.constraint(equalTo: kidsFormView.leadingAnchor, constant: 10).isActive = true
         kidsNameView.trailingAnchor.constraint(equalTo: kidsFormView.trailingAnchor, constant: -10).isActive = true
         kidsNameView.heightAnchor.constraint(equalToConstant: 60).isActive = true
-        kidsNameView.backgroundColor = .green
+        kidsNameView.backgroundColor = .clear
+        
         kidsNameView.addSubview(kidsNamePlacrholder)
         kidsNamePlacrholder.translatesAutoresizingMaskIntoConstraints = false
         kidsNamePlacrholder.topAnchor.constraint(equalTo: kidsNameView.topAnchor, constant: 5).isActive = true
         kidsNamePlacrholder.leadingAnchor.constraint(equalTo: kidsNameView.leadingAnchor, constant: 10).isActive = true
+        
         kidsNameView.addSubview(kidsNameTextField)
         kidsNameTextField.translatesAutoresizingMaskIntoConstraints = false
         kidsNameTextField.topAnchor.constraint(equalTo: kidsNamePlacrholder.bottomAnchor, constant: 5).isActive = true
@@ -310,24 +318,27 @@ class MainViewController: UIViewController, UITextFieldDelegate {
         kidsAgeView.leadingAnchor.constraint(equalTo: kidsFormView.leadingAnchor, constant: 10).isActive = true
         kidsAgeView.trailingAnchor.constraint(equalTo: kidsFormView.trailingAnchor, constant: -10).isActive = true
         kidsAgeView.heightAnchor.constraint(equalToConstant: 60).isActive = true
-        kidsAgeView.backgroundColor = .white
+        kidsAgeView.backgroundColor = .clear
+        
         kidsAgeView.addSubview(kidsAgePlacrholder)
         kidsAgePlacrholder.translatesAutoresizingMaskIntoConstraints = false
         kidsAgePlacrholder.topAnchor.constraint(equalTo: kidsAgeView.topAnchor, constant: 5).isActive = true
         kidsAgePlacrholder.leadingAnchor.constraint(equalTo: kidsAgeView.leadingAnchor, constant: 10).isActive = true
         
+        kidsAgeView.addSubview(kidsAgeTextField)
+        kidsAgeTextField.translatesAutoresizingMaskIntoConstraints = false
+        kidsAgeTextField.topAnchor.constraint(equalTo: kidsAgePlacrholder.bottomAnchor, constant: 10).isActive = true
+        kidsAgeTextField.leadingAnchor.constraint(equalTo: kidsAgeView.leadingAnchor, constant: 10).isActive = true
+        kidsAgeTextField.trailingAnchor.constraint(equalTo: kidsAgeView.trailingAnchor, constant: -10).isActive = true
+        kidsAgeTextField.backgroundColor = .clear
         
-        
+        newView.addSubview(delKidsButton)
+        delKidsButton.translatesAutoresizingMaskIntoConstraints = false
+        delKidsButton.topAnchor.constraint(equalTo: newView.topAnchor, constant: 15).isActive = true
+        delKidsButton.leadingAnchor.constraint(equalTo: kidsFormView.trailingAnchor, constant: 10).isActive = true
+        delKidsButton.trailingAnchor.constraint(equalTo: newView.trailingAnchor, constant: -10).isActive = true
+        delKidsButton.heightAnchor.constraint(equalToConstant: 60).isActive = true
+        delKidsButton.backgroundColor = .clear
     }
-    
-    
-    
-    
-    func textFieldDidEndEditing(_ textField: UITextField) {
-        textField.resignFirstResponder()
-    }
-    
     
 }
-
-

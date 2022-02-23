@@ -1,9 +1,3 @@
-//
-//  AppDelegate.swift
-//  AlefTZ
-//
-//  Created by Andrei Bezlepkin on 23.02.22.
-//
 
 import UIKit
 
